@@ -118,6 +118,33 @@ int buildEncodingTree(int nextFree) {
 
 // Step 4: Use an STL stack to generate codes
 void generateCodes(int root, string codes[]) {
+    stack<pair<int, string>> s; //stack object containing an element with both an int and string?
+    s.push(make_pair(root,"");
+
+    while (!s.empty()) {
+        //int i = s.pop(); can we safely get int data from the paired stack?
+        auto e = s.top();
+        s.pop();
+        int i= e.first();
+        string currcode=e.second;//empty in first iteration but has value later
+        if (leftArr[i]==-1 && rightArr[i]==-1) {
+            //-1 is a better vlaue than 0 in case we wanted a weigth 0?
+            char ch=charArr[i];
+            if (ch!='0') {
+                currcode+=ch;//Need to figure out proper conversion
+            }
+        }
+        else {//traversal case
+            if (rightArr[i]!=-1) {
+                s.push({rightArr[i],currcode+'1'});
+                //+1
+            }
+            if (leftArr[i]!=-1) {
+                s.push({leftArr[i],currcode+'0'});
+                //+0
+            }
+        }
+    }
     // TODO:
     // Use stack<pair<int, string>> to simulate DFS traversal.
     // Left edge adds '0', right edge adds '1'.
