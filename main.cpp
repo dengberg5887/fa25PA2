@@ -10,10 +10,10 @@ using namespace std;
 
 // Global arrays for node information
 const int MAX_NODES = 64;
-int weightArr[MAX_NODES];
-int leftArr[MAX_NODES];
-int rightArr[MAX_NODES];
-char charArr[MAX_NODES];
+int weightArr[MAX_NODES];//stores weights
+int leftArr[MAX_NODES];//stores left children
+int rightArr[MAX_NODES];//stores right children
+char charArr[MAX_NODES];//stores values
 
 // Function prototypes
 void buildFrequencyTable(int freq[], const string& filename);
@@ -91,8 +91,23 @@ int createLeafNodes(int freq[]) {
 int buildEncodingTree(int nextFree) {
     // TODO:
     // 1. Create a MinHeap object.
+    MinHeap h= new MinHeap();
     // 2. Push all leaf node indices into the heap.
+    for (int i=0; i< nextFree; ++i) {
+        h.push(i, weightArr);//passing weightarr to work with
+    }
     // 3. While the heap size is greater than 1:
+    while (h.size() > 1) {
+        int n1=h.pop(weightArr);
+        int n2=h.pop(weightArr);
+        weightArr[nextFree]=weightArr[n1]+weightArr[n2];
+        leftArr[nextFree]=n1;
+        rightArr[nextFree]=n2;
+        charArr[nextFree]= '0';
+        h.push(n1+n2, weightArr);
+        nextFree++;
+    }
+    return h.pop(weightArr);
     //    - Pop two smallest nodes
     //    - Create a new parent node with combined weight
     //    - Set left/right pointers
