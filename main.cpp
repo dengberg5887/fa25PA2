@@ -98,14 +98,15 @@ int buildEncodingTree(int nextFree) {
     }
     // 3. While the heap size is greater than 1:
     while (h->size > 1) {
-        int n1=h->pop(weightArr);
-        int n2=h->pop(weightArr);
-        weightArr[nextFree]=weightArr[n1]+weightArr[n2];
-        leftArr[nextFree]=n1;
-        rightArr[nextFree]=n2;
-        charArr[nextFree]= '0';
-        h->push(n1+n2, weightArr);
-        nextFree++;
+        int left=h->pop(weightArr);
+        int right=h->pop(weightArr);
+        int parent = nextFree++;
+        weightArr[parent]=weightArr[left]+weightArr[right];
+        leftArr[parent]=left;
+        rightArr[parent]=right;
+        charArr[parent]= '0';
+        h->push(parent, weightArr);
+//most relevant debugging region!!
     }
     return h->pop(weightArr);
     //    - Pop two smallest nodes
@@ -123,16 +124,15 @@ void generateCodes(int root, string codes[]) {
 
     while (!s.empty()) {
         //int i = s.pop(); can we safely get int data from the paired stack?
-        auto e = s.top();
+        pair<int, string> e = s.top();
         s.pop();
         int i= e.first;
         string currcode=e.second;//empty in first iteration but has value later
         if (leftArr[i]==-1 && rightArr[i]==-1) {
             //-1 is a better vlaue than 0 in case we wanted a weigth 0?
             char ch=charArr[i];
-            if (ch!='0') {
-                currcode+=(ch-'a');//Need to figure out proper conversion
-                codes[i]=currcode;
+            if (ch!='0') {//trying to handle internal cases properly
+                codes[ch-'a']=currcode;
             }
         }
         else {//traversal case
