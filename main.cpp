@@ -91,23 +91,23 @@ int createLeafNodes(int freq[]) {
 int buildEncodingTree(int nextFree) {
     // TODO:
     // 1. Create a MinHeap object.
-    MinHeap h= new MinHeap();
+    MinHeap* h= new MinHeap();
     // 2. Push all leaf node indices into the heap.
     for (int i=0; i< nextFree; ++i) {
-        h.push(i, weightArr);//passing weightarr to work with
+        h->push(i, weightArr);//passing weightarr to work with
     }
     // 3. While the heap size is greater than 1:
-    while (h.size() > 1) {
-        int n1=h.pop(weightArr);
-        int n2=h.pop(weightArr);
+    while (h->size > 1) {
+        int n1=h->pop(weightArr);
+        int n2=h->pop(weightArr);
         weightArr[nextFree]=weightArr[n1]+weightArr[n2];
         leftArr[nextFree]=n1;
         rightArr[nextFree]=n2;
         charArr[nextFree]= '0';
-        h.push(n1+n2, weightArr);
+        h->push(n1+n2, weightArr);
         nextFree++;
     }
-    return h.pop(weightArr);
+    return h->pop(weightArr);
     //    - Pop two smallest nodes
     //    - Create a new parent node with combined weight
     //    - Set left/right pointers
@@ -119,19 +119,20 @@ int buildEncodingTree(int nextFree) {
 // Step 4: Use an STL stack to generate codes
 void generateCodes(int root, string codes[]) {
     stack<pair<int, string>> s; //stack object containing an element with both an int and string?
-    s.push(make_pair(root,"");
+    s.push(make_pair(root,""));
 
     while (!s.empty()) {
         //int i = s.pop(); can we safely get int data from the paired stack?
         auto e = s.top();
         s.pop();
-        int i= e.first();
+        int i= e.first;
         string currcode=e.second;//empty in first iteration but has value later
         if (leftArr[i]==-1 && rightArr[i]==-1) {
             //-1 is a better vlaue than 0 in case we wanted a weigth 0?
             char ch=charArr[i];
             if (ch!='0') {
-                currcode+=ch;//Need to figure out proper conversion
+                currcode+=(ch-'a');//Need to figure out proper conversion
+                codes[i]=currcode;
             }
         }
         else {//traversal case
